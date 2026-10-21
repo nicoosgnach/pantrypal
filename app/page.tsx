@@ -4,11 +4,11 @@ import { useChat } from "@ai-sdk/react";
 import { useState } from "react";
 
 type SearchOutput =
-  | { results: { title: string; url: string; content: string }[] }
+  | { note?: string; results: { title: string; url: string; content: string }[] }
   | { error: string };
 
-type WebSearchPart = {
-  type: "tool-webSearch";
+type SearchRecipesPart = {
+  type: "tool-searchRecipes";
   toolCallId: string;
   state: string;
   input?: { query?: string };
@@ -16,7 +16,7 @@ type WebSearchPart = {
   errorText?: string;
 };
 
-function WebSearchCall({ part }: { part: WebSearchPart }) {
+function SearchRecipesCall({ part }: { part: SearchRecipesPart }) {
   const query = part.input?.query ?? "";
 
   if (part.state === "output-error") {
@@ -25,7 +25,7 @@ function WebSearchCall({ part }: { part: WebSearchPart }) {
 
   if (part.state !== "output-available" || !part.output) {
     return (
-      <p className="text-sm text-zinc-500 animate-pulse">Searching: {query}...</p>
+      <p className="text-sm text-zinc-500 animate-pulse">Finding recipes: {query}...</p>
     );
   }
 
@@ -35,7 +35,7 @@ function WebSearchCall({ part }: { part: WebSearchPart }) {
 
   return (
     <div className="text-sm">
-      <p className="text-zinc-500">Searched: {query}</p>
+      <p className="text-zinc-500">Searched recipes: {query}</p>
       <ul className="mt-1 list-disc pl-5 space-y-0.5">
         {part.output.results.map((r) => (
           <li key={r.url}>
@@ -63,7 +63,7 @@ export default function Chat() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-6">
-      <h1 className="mb-4 text-xl font-semibold">Web search chat</h1>
+      <h1 className="mb-4 text-xl font-semibold">PantryPal</h1>
 
       <div className="flex-1 space-y-4">
         {messages.map((m) => (
@@ -83,9 +83,9 @@ export default function Chat() {
                   </p>
                 );
               }
-              if (part.type === "tool-webSearch") {
-                const p = part as unknown as WebSearchPart;
-                return <WebSearchCall key={p.toolCallId} part={p} />;
+              if (part.type === "tool-searchRecipes") {
+                const p = part as unknown as SearchRecipesPart;
+                return <SearchRecipesCall key={p.toolCallId} part={p} />;
               }
               return null;
             })}
@@ -113,7 +113,7 @@ export default function Chat() {
           className="flex-1 rounded-md border border-zinc-300 px-3 py-2 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={busy ? "Waiting for response..." : "Ask anything..."}
+          placeholder={busy ? "Waiting for response..." : "What are you in the mood to cook?"}
           disabled={busy}
         />
         <button

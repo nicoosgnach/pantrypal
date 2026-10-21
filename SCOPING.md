@@ -16,7 +16,7 @@
 ## Contradictions resolved
 - **Under 2s (Priya) vs. quality first (Marcus).** Stream so users see a response within ~2s, but never skip equipment or allergen checks to finish faster.
 - **"Thread the needle" on health (Marcus) vs. no medical advice (Diane).** Legal wins: accommodate preferences and allergen exclusions, never medical conditions.
-- **Generous topic scope (Marcus) vs. stay in lane (Priya).** Food-adjacent is in; food safety and health are out however food-adjacent they sound; off-topic gets a warm redirect.
+- **Generous topic scope (Marcus) vs. stay in lane (Priya).** Food-adjacent is in; food safety and health are out however food-adjacent that sound off-topic gets a warm redirect.
 - **Personality (Marcus, Jordan) vs. required disclaimers (Diane).** Opinionated prose; notices in a consistent UI element so they're never dropped and never read as hedging.
 
 ## Clarifying questions
