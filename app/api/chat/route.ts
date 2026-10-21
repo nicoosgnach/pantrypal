@@ -8,6 +8,7 @@ import {
 import { KitchenProfileSchema } from "@/lib/profile";
 import { buildSystemPrompt } from "@/lib/prompt";
 import { searchRecipes } from "@/lib/tools/searchRecipes";
+import { updateKitchenProfile } from "@/lib/tools/updateKitchenProfile";
 
 export const maxDuration = 60;
 
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
     model: anthropic(process.env.ANTHROPIC_MODEL ?? "claude-sonnet-5-5"),
     system: buildSystemPrompt(profile),
     messages: await convertToModelMessages(body.messages),
-    tools: { searchRecipes },
+    tools: { searchRecipes, updateKitchenProfile },
     stopWhen: stepCountIs(5),
   });
 
