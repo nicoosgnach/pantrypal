@@ -7,11 +7,12 @@
 - **Legal guardrails built into the format.** An allergen notice is rendered by the app on every assistant response (not left to the model). Medical conditions get a generic acknowledgment plus a referral to a professional, with no adaptation. "Is this safe to eat?" questions redirect to USDA/FoodSafety.gov. Self-declared 13+ age gate.
 - **Opinionated, friendly voice.** Takes positions ("make this instead") without hedging; required notices live in the UI, not in the prose.
 - **Streaming plus cost-aware routing.** Responses stream with visible tool status; simple questions go to a cheaper model, recipe search and synthesis to a stronger one.
+- **Push-to-talk voice input.** A mic button transcribes speech into the input box using the browser's built-in speech recognition (Chrome/Safari); the user reviews the text before sending. Added after the core was working, as a first step toward Marcus's hands-free vision.
 
 ## Scope cut
 - **Persistent cross-session memory.** Highest-value cut, but legal wants a retention and deletion story before we store anything health-adjacent (allergies included). V1 keeps the profile per session as a typed object, ready to persist once that story exists.
 - **Adapting to medical diets** (diabetes, pregnancy, medically prescribed keto). Legal non-negotiable. Lifestyle preferences are still honored.
-- **Voice/hands-free, favorites, grocery-list export, cookbook PDF import.** Real demand, but v2. The chat API is text in, text out, so a voice layer can sit on top later.
+- **Always-on hands-free mode, read-aloud answers, favorites, grocery-list export, cookbook PDF import.** Real demand but v2. Push-to-talk is in; always-on listening raises privacy questions for legal, and the text-in/text-out API lets a full voice layer sit on top later.
 
 ## Contradictions resolved
 - **Under 2s (Priya) vs. quality first (Marcus).** Stream so users see a response within ~2s, but never skip equipment or allergen checks to finish faster.
@@ -24,6 +25,7 @@
 - Priya: is "under 2 seconds" time to first response or full answer?
 - Priya/Marcus: what's the per-conversation cost ceiling? It sets the routing thresholds.
 - Diane: is a self-declared age gate sufficient for the COPPA stance?
+- Diane: Chrome's speech recognition sends audio to Google's servers. Is that acceptable, or do we need a different speech provider before launch?
 
 ## Assumptions made
 - A self-declared 13+ gate is enough for v1; no ID upload, since that adds privacy risk.
@@ -36,3 +38,4 @@
 - Synthesized recipes may contain hidden allergens. Mitigated by the always-on notice; we never claim a recipe is allergen-safe.
 - Web search results could contain prompt injection. They're treated as untrusted data, but the risk isn't eliminated.
 - Session-only memory will frustrate returning users until persistence ships.
+- Speech recognition can mishear words, including allergens. Mitigated by showing the transcript for review before sending, and by the always-on allergen notice.
