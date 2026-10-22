@@ -5,6 +5,7 @@ import type { UIMessage } from "ai";
 import { useState } from "react";
 import { AgeGate } from "@/app/components/AgeGate";
 import { AllergenNotice } from "@/app/components/AllergenNotice";
+import { MicButton } from "@/app/components/MicButton";
 import { ProfilePanel } from "@/app/components/ProfilePanel";
 import {
   emptyProfile,
@@ -186,6 +187,7 @@ function Chat() {
           placeholder={busy ? "Waiting for response..." : "What are you in the mood to cook?"}
           disabled={busy}
         />
+        <MicButton value={input} onChange={setInput} disabled={busy} />
         <button
           type="submit"
           className="rounded-md bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
