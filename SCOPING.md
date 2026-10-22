@@ -1,24 +1,24 @@
 # SCOPING.md
 
 ## Scope committed
-- **Kitchen-aware recipe assistant.** Recommends recipes and gives concise, step-by-step instructions synthesized from web search (with source links), tailored to the user's equipment, ingredients on hand, craving, stated preferences, and allergens to avoid.
-- **Per-user kitchen profile (answer to the cookware problem).** No fixed starter kit. Users list their equipment in a profile panel or mention it in chat, and the model saves it via an `updateKitchenProfile` tool. Recipes are checked against it; if something is missing, the assistant offers a workaround or a similar recipe instead of just saying no.
-- **General cooking help.** Techniques, doneness, substitutions; food-adjacent topics (wine pairing, gear, hosting) allowed; clearly off-topic requests get a friendly redirect.
-- **Legal guardrails built into the format.** An allergen notice is rendered by the app on every assistant response (not left to the model). Medical conditions get a generic acknowledgment plus a referral to a professional, with no adaptation. "Is this safe to eat?" questions redirect to USDA/FoodSafety.gov. Self-declared 13+ age gate.
-- **Opinionated, friendly voice.** Takes positions ("make this instead") without hedging; required notices live in the UI, not in the prose.
-- **Streaming plus cost-aware routing.** Responses stream with visible tool status; simple questions go to a cheaper model, recipe search and synthesis to a stronger one.
-- **Push-to-talk voice input.** A mic button transcribes speech into the input box using the browser's built-in speech recognition (Chrome/Safari); the user reviews the text before sending. Added after the core was working, as a first step toward Marcus's hands-free vision.
+- **Kitchen-aware recipe assistant.** This tool recommends recipes and gives concise, step-by-step instructions synthesized from web search (with source links), tailored to the user's equipment, ingredients on hand, craving, stated preferences, and allergens to strictly avoid as mentioned multiple times by stakeholders in the brief.
+- **Per-user kitchen profile (answer to the cookware problem).** Rather than having a fixed starter kit (and the issues associated with it mentioned by Jordan), users list their equipment in a profile panel or mention it in chat, and the model saves it via an `updateKitchenProfile` tool. Each time a recipe is found it is checked against it, if something is missing, PantryPal offers a workaround or a similar recipe instead of just saying no.
+- **General cooking help.** Outside of just recipes it provides techniques, doneness, and substitutions, allowing food-adjacent topics (wine pairing, gear, hosting), but giving a friendly redirect to clearly off-topic requests.
+- **Legal guardrails built into the format.** First of all, allergen notice is rendered by the app on every assistant response (not left to the model). Next, medical conditions get a generic acknowledgment plus a referral to a professional, with no adaptation. As instructed by Diane, to prioritize safety on the legal side of things "Is this safe to eat?" questions get redirected to USDA/FoodSafety.gov. Lastly, the 13+ age gate is self-declared in V1.
+- **Opinionated, friendly voice.** To make it have a more "human feel" PantryPal takes positions ("make this instead") without hedging. To further this, required notices live in the UI, not in the prose.
+- **Streaming plus cost-aware routing.** To begin addressing cost concerns posed by Priya, responses stream with visible tool status, with simple questions going to a cheaper model, and recipe search/synthesis to a stronger one.
+- **Push-to-talk voice input.** To introduce part of the touchless loop indicated by Marcus, the mic button transcribes speech into the input box using the browser's built-in speech recognition (Chrome/Safari). To also prevent liability of an innaccurate transcription falling on us, the user reviews the text before sending. This was added after the core was working, as a first step toward Marcus's hands-free vision.
 
 ## Scope cut
-- **Persistent cross-session memory.** Highest-value cut, but legal wants a retention and deletion story before we store anything health-adjacent (allergies included). V1 keeps the profile per session as a typed object, ready to persist once that story exists.
-- **Adapting to medical diets** (diabetes, pregnancy, medically prescribed keto). Legal non-negotiable. Lifestyle preferences are still honored.
-- **Always-on hands-free mode, read-aloud answers, favorites, grocery-list export, cookbook PDF import.** Real demand but v2. Push-to-talk is in; always-on listening raises privacy questions for legal, and the text-in/text-out API lets a full voice layer sit on top later.
+- **Persistent cross-session memory.** Though this concern was voiced many times and is likely the highest-value cut, legal wants a retention and deletion story before we store anything health-adjacent (allergies included). Thus, V1 (at least) keeps the profile per session as a typed object, ready to persist once that story exists.
+- **Adapting to medical diets** (diabetes, pregnancy, medically prescribed keto). These were legally non-negotiable, appeasing Diane's concerns, however lifestyle preferences are still honored, appeasing Marcus's direction.
+- **Always-on hands-free mode, read-aloud answers, favorites, grocery-list export, cookbook PDF import.** Though this is a real demand, there's multiple obstacles that must be cleared first so saving this for V2. However, push-to-talk is at least in, as always-on listening raises privacy questions for legal, and the text-in/text-out API lets a full voice layer sit on top later.
 
 ## Contradictions resolved
-- **Under 2s (Priya) vs. quality first (Marcus).** Stream so users see a response within ~2s, but never skip equipment or allergen checks to finish faster.
-- **"Thread the needle" on health (Marcus) vs. no medical advice (Diane).** Legal wins: accommodate preferences and allergen exclusions, never medical conditions.
-- **Generous topic scope (Marcus) vs. stay in lane (Priya).** Food-adjacent is in; food safety and health are out however food-adjacent that sound off-topic gets a warm redirect.
-- **Personality (Marcus, Jordan) vs. required disclaimers (Diane).** Opinionated prose; notices in a consistent UI element so they're never dropped and never read as hedging.
+- **Under 2s (Priya) vs. quality first (Marcus).** Outputs are streamed so users see a response within ~2s, but never skip equipment or allergen checks to finish faster (also partially addressing legal concerns).
+- **"Thread the needle" on health (Marcus) vs. no medical advice (Diane).** To stay consistent with the legal safety approach: accommodate preferences and allergen exclusions, but never medical conditions, legal wins here.
+- **Generous topic scope (Marcus) vs. stay in lane (Priya).** Food-adjacent requests, such as general recommendations, are in, however food safety and health are out, and food-adjacent that sound off-topic gets a warm redirect.
+- **Personality (Marcus, Jordan) vs. required disclaimers (Diane).** To address both these issues but not make them mutually exclusive, prose are opinionated, while notices are in a consistent UI element so they're never dropped and never read as hedging.
 
 ## Clarifying questions
 - Diane: exact wording for the allergen notice and health redirect, and can we store allergies (not conditions) if users can delete them?
