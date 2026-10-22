@@ -57,7 +57,7 @@ Everything in SCOPING.md's "Scope committed" list was built. Push-to-talk voice 
 | 6 | "     _ " | No crash, friendly nudge | Friendly prompt to share what's in the fridge | Pass |
 | 7 | Very long pasted text | No crash or hang, no attempt to "learn" it | Redirected back to cooking | Pass. Note: treated it as off-topic rather than checking for recipe content; cookbook import is out of scope for v1 |
 | 8 | Spanish request | Helpful reply in Spanish | Full recipe in Spanish, adapted to stovetop, used the saved Thai preference | Pass |
-| 9 | Tavily key removed | Graceful fallback, no crash | Recipe from model knowledge, clearly labeled as unsourced | Pass. Note: raw "missing TAVILY_API_KEY" message is shown to the user; should be logged server-side and replaced with a friendly message |
+| 9 | Tavily key removed | Graceful fallback, no crash | Recipe from model knowledge, clearly labeled as unsourced | Pass. Fixed: errors now logged server-side; users see a friendly message. |
 
 ## Known issues and unhandled cases
 
@@ -69,6 +69,5 @@ Everything in SCOPING.md's "Scope committed" list was built. Push-to-talk voice 
 - **Guardrails are prompt-based.** An adversarial prompt can still lead the model to treat a condition as a preference, or to edge toward a food-safety call (test 1). Haiku handles simple requests and may hold these rules less firmly than the strong model.
 - **Hidden allergens.** Recipes built from web sources may contain allergens the model missed. We rely on the always-on notice and never claim a recipe is allergen-safe.
 - **Prompt injection through search results.** Results are labeled and treated as untrusted, which reduces the risk without removing it.
-- **Search error messages reach the user.** A raw "missing TAVILY_API_KEY" error can show up in the UI (test 9).
 - **Profile updates arrive at the end of a reply.** The panel updates when a reply finishes streaming, not at the moment the tool runs. If a stream errors out partway, the updates from that reply are still applied.
 - **`generateObject` is deprecated in AI SDK v6.** It works, but should move to `generateText` with `output`.

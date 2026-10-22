@@ -32,7 +32,7 @@ function SearchRecipesCall({ part }: { part: SearchRecipesPart }) {
   const query = part.input?.query ?? "";
 
   if (part.state === "output-error") {
-    return <p className="text-sm text-red-600">Search failed: {part.errorText}</p>;
+    return <p className="text-sm text-red-600">Recipe search is unavailable right now.</p>;
   }
 
   if (part.state !== "output-available" || !part.output) {

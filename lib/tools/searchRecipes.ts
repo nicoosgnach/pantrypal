@@ -10,6 +10,10 @@ type TavilyResponse = {
   results?: { title?: string; url?: string; content?: string }[];
 };
 
+// Generic result for the model and UI; the real cause is only logged
+// server-side so env var names and internals never reach the user.
+const UNAVAILABLE = { error: "Recipe search is unavailable right now." };
+
 function trim(text: string, max: number) {
   return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 }
@@ -31,7 +35,8 @@ export const searchRecipes = tool({
   }): Promise<{ note: string; results: SearchResult[] } | { error: string }> => {
     const apiKey = process.env.TAVILY_API_KEY;
     if (!apiKey) {
-      return { error: "Recipe search is not configured (missing TAVILY_API_KEY)." };
+      console.error("[searchRecipes] TAVILY_API_KEY is not set");
+      return UNAVAILABLE;
     }
 
     try {
@@ -50,7 +55,8 @@ export const searchRecipes = tool({
       });
 
       if (!res.ok) {
-        return { error: `Recipe search failed (Tavily HTTP ${res.status}).` };
+        console.error(`[searchRecipes] Tavily HTTP ${res.status}`);
+        return UNAVAILABLE;
       }
 
       const data = (await res.json()) as TavilyResponse;
@@ -71,8 +77,11 @@ export const searchRecipes = tool({
       const reason =
         err instanceof Error && err.name === "TimeoutError"
           ? "request timed out"
-          : "network error";
-      return { error: `Recipe search failed (${reason}).` };
+          : err instanceof Error
+            ? `${err.name}: ${err.message}`
+            : "unknown error";
+      console.error(`[searchRecipes] Tavily request failed: ${reason}`);
+      return UNAVAILABLE;
     }
   },
 });
